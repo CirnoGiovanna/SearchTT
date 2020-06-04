@@ -1,0 +1,9 @@
+python GetOldTweets3.py --querysearch "europe refugees" --maxtweets 10
+
+python GetOldTweets3.py --querysearch "¤Ê¤Þ¹«" --maxtweets 10
+
+d: & cd D:\pythonwork\SearchTT & activate test &
+
+python tc.py --querysearch "europe refugees" --maxtweets 10
+
+python tc.py --querysearch "¤Ê¤Þ¹«" --maxtweets 10
