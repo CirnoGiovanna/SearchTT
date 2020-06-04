@@ -131,7 +131,7 @@ def main(argv):
             else:
                 tweetCriteria.username = usernames.pop()
 
-        outputFile = open(outputFileName, "w+", encoding="utf-8")#default utf-8
+        outputFile = open(outputFileName, "w+", encoding="utf_8_sig")#utf-8 withBOM, avoid garbled csv file in windows
         outputFile.write('date,username,to,replies,retweets,favorites,text,geo,mentions,hashtags,id,permalink\n')
 
         cnt = 0
