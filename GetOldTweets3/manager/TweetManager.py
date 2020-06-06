@@ -5,6 +5,15 @@ import urllib.request, urllib.parse, urllib.error
 from pyquery import PyQuery
 from .. import models
 
+import pdb, os
+
+def jsonWrite(myJson, dirName, fileName):
+    if not os.path.exists(dirName):
+        os.makedirs(dirName)
+    filePath = dirName + '/' +fileName
+    with open(filePath,'w',encoding='utf-8') as f:
+        json.dump(myJson ,f,ensure_ascii=False,indent=2)
+
 class TweetManager:
     """A class for accessing the Twitter's search engine"""
     def __init__(self):
@@ -41,7 +50,7 @@ class TweetManager:
 
         all_usernames = []
         usernames_per_batch = 20
-
+        
         if hasattr(tweetCriteria, 'username'):
             if type(tweetCriteria.username) == str or not hasattr(tweetCriteria.username, '__iter__'):
                 tweetCriteria.username = [tweetCriteria.username]
@@ -62,12 +71,14 @@ class TweetManager:
 
             active = True
             while active:
-                json = TweetManager.getJsonResponse(tweetCriteria, refreshCursor, cookieJar, proxy, user_agent, debug=debug)
-                if len(json['items_html'].strip()) == 0:
+                json_info = TweetManager.getJsonResponse(tweetCriteria, refreshCursor, cookieJar, proxy, user_agent, debug=debug)
+                jsonWrite(json_info, '.', 'temp.json')
+                #pdb.set_trace()###########################################
+                if len(json_info['items_html'].strip()) == 0:
                     break
 
-                refreshCursor = json['min_position']
-                scrapedTweets = PyQuery(json['items_html'])
+                refreshCursor = json_info['min_position']
+                scrapedTweets = PyQuery(json_info['items_html'])
                 #Remove incomplete tweets withheld by Twitter Guidelines
                 scrapedTweets.remove('div.withheld-tweet')
                 tweets = scrapedTweets('div.js-stream-tweet')
@@ -248,7 +259,11 @@ class TweetManager:
         url += ("vertical=news&q=%s&src=typd&%s"
                 "&include_available_features=1&include_entities=1&max_position=%s"
                 "&reset_error_state=false")
-
+        '''
+        url += ("vertical=news&q=%s&src=typd&%s"
+                "&include_available_features=1&include_entities=1&max_position=%s"
+                "&reset_error_state=false")
+        '''
         urlGetData = ''
 
         if hasattr(tweetCriteria, 'querySearch'):
@@ -303,7 +318,7 @@ class TweetManager:
         if debug:
             print(url)
             print('\n'.join(h[0]+': '+h[1] for h in headers))
-
+    
         try:
             response = opener.open(url)
             jsonResponse = response.read()

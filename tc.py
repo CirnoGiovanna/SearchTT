@@ -1,6 +1,8 @@
 import os, sys, re, getopt
 import traceback
 
+import pdb
+
 if sys.version_info[0] < 3:
     raise Exception("Python 2.x is not supported. Please upgrade to 3.x")
 
