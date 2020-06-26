@@ -6,6 +6,7 @@ from pyquery import PyQuery
 from .. import models
 
 import pdb, os
+from datetime import timedelta
 
 def jsonWrite(myJson, dirName, fileName):
     if not os.path.exists(dirName):
@@ -105,14 +106,15 @@ class TweetManager:
                     tweet.id = tweetPQ.attr("data-tweet-id")
                     tweet.permalink = 'https://twitter.com' + tweetPQ.attr("data-permalink-path")
                     tweet.author_id = int(tweetPQ("a.js-user-profile-link").attr("data-user-id"))
-
-                    dateSec = int(tweetPQ("small.time span.js-short-timestamp").attr("data-time"))
-                    tweet.date = datetime.datetime.fromtimestamp(dateSec, tz=datetime.timezone.utc)
+                    #pdb.set_trace()
+                    dateSec = int(tweetPQ("small.time span.js-short-timestamp").attr("data-time")) + 9*60*60#JST = UTC +9
+                    
+                    tweet.date = datetime.datetime.fromtimestamp(dateSec, tz=datetime.timezone.utc)#####timezone
                     tweet.formatted_date = datetime.datetime.fromtimestamp(dateSec, tz=datetime.timezone.utc)\
                                                             .strftime("%a %b %d %X +0000 %Y")
                     tweet.mentions = " ".join(re.compile('(@\\w*)').findall(tweet.text))
                     tweet.hashtags = " ".join(re.compile('(#\\w*)').findall(tweet.text))
-
+                    
                     geoSpan = tweetPQ('span.Tweet-geo')
                     if len(geoSpan) > 0:
                         tweet.geo = geoSpan.attr('title')
@@ -198,6 +200,10 @@ class TweetManager:
             html = match.group(4)
 
             attr = TweetManager.parse_attributes(link)
+            ################
+            if not ('class' in attr.keys()):
+                pdb.set_strace()
+            ###
             if "u-hidden" in attr["class"]:
                 pass
             elif "data-expanded-url" in attr \

@@ -10,4 +10,8 @@ python tc.py --querysearch "¤Ê¤Þ¹«" --maxtweets 10
 
 https://twitter.com/i/search/timeline?f=tweets&vertical=news&q=%E3%81%AA%E3%81%BE%E5%85%AC&src=typd&&include_available_features=1&include_entities=1&max_position=&reset_error_state=false
 
-git add . & git commit -m 'Read algorithm.' & git push
+python tc.py --username "ShizuRin23" --toptweets --maxtweets 10
+
+--debug--
+jsonWrite(attr, './', 'temp.json')
+
